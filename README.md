@@ -9,14 +9,14 @@ The Lightning Network Faucet is a faucet that is currently deployed on Bitcon's
 testnet at: https://faucet.lightning.community. 
 
 
-The Testnet Channel Faucet (TCF) is similar to other existing Bitcoin faucets.
-However, rather then sending bitcoin directly on-chain to a user of the faucet,
-the TCF will instead open a payment channel with the target user. The user can
-then either use their new link to the Lighting Network to facilitate payments,
-or immediately close the channel (which immediately credits them on-chain like
-regular faucets).
+The Testnet Lightning Faucet (TLF) is similar to other existing Bitcoin
+faucets.  However, rather then sending bitcoin directly on-chain to a user of
+the faucet, the TLF will instead open a payment channel with the target user.
+The user can then either use their new link to the Lighting Network to
+facilitate payments, or immediately close the channel (which immediately
+credits them on-chain like regular faucets).
 
-Currently the TCF is only compatible with lnd, but in the near future as the
+Currently the TLF is only compatible with `lnd`, but in the near future as the
 other Lightning implementations ([eclair](https://github.com/ACINQ/eclair/),
 [c-lightning](https://github.com/ElementsProject/lightning),
 [lit](https://github.com/ElementsProject/lightning), and more) become
@@ -42,10 +42,10 @@ implementations.
     $ go get -u github.com/Masterminds/glide
     ```
 
-With the preliminary steps completed, to install the Testnet Channel Faucet
+With the preliminary steps completed, to install the Testnet Lightning Faucet
 ```
-$ git clone https://github.com/lightninglabs/channel-faucet $GOPATH/src/github.com/lightninglabs/channel-faucet
-$ cd $GOPATH/src/github.com/lightninglabs/channel-faucet
+$ git clone https://github.com/lightninglabs/lightning-faucet $GOPATH/src/github.com/lightninglabs/lightning-faucet
+$ cd $GOPATH/src/github.com/lightninglabs/lightning-faucet
 $ glide install
 $ go install -v
 ```
@@ -58,7 +58,7 @@ Once you have the faucet installed, you'll need to ensure you have a local
 Once the node is synced, execute the following command (from this directory) to
 deploy the faucet:
 ```
-channel-faucet --lnd_ip=X.X.X.X
+lightning-faucet --lnd_ip=X.X.X.X
 ```
 
 Where `X.X.X.X` is the public, reachable IP address for your active `lnd` node.
@@ -68,10 +68,10 @@ by default.
 
 
 ### Updating
-To update your version of the `TCF` to the latest version run the following
+To update your version of the `TLF` to the latest version run the following
 commands:
 ```
-$ cd $GOPATH/src/github.com/lightninglabs/channel-faucet
+$ cd $GOPATH/src/github.com/lightninglabs/lightning-faucet
 $ git pull && glide install
 $ go install -v
 ```
