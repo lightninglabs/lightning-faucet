@@ -1,0 +1,102 @@
+{{template "header"}}
+
+<div class="row">
+
+  <div class="col m3"> </div>
+  <div class="center col s12 m6">
+      <a href="/">
+          <h1 id="title" class="flow-text">Testnet Lightning Network Faucet</h1>
+      </a>
+      <ul class="collection">
+          <li class="collection-item">{{ .NodeAddr }}</li>
+      </ul>
+  </div>
+  <div class="col m3"> </div>
+
+</div>
+
+<div class="row">
+  <div class="col m3"> </div>
+
+  <div class="center col m6">
+      <div class="chan-form card-panel hoverable">
+          {{if eq .ChannelTxid ""}}
+              <h6 class="flow-text">{{ .NumCoins }} BTC are available for channel creation. </h6>
+              <h6 class="flow-text">The faucet has {{ .NumChannels }} active {{if eq .NumChannels 1}} channel {{else}} channels {{end}} on the network. </h6>
+              <h6 class="flow-text">The max channel size is 4 million satoshis. </h6>
+
+              {{ if eq .SubmissionError 8 }}
+                  <h6 class="flow-text red">Channel already open with node.</h6>
+              {{end}}
+
+              <br>
+
+              <h6 class="center align flow-text">Channel Creation Parameters</h6>
+
+              <form method="post" action="/"> 
+                  <div class="row">
+                      <div class="input-field col s12">
+                          <input placeholder="<pubkey>" 
+                             {{if eq .SubmissionError 1 2}} 
+                                class="invalid" 
+                             {{end}}
+                            id="node" name="node" type="text">
+                          <label for="node" data-error="{{ if eq .SubmissionError 1 2}}{{printf "%v" .SubmissionError}}{{end}}">
+                              Target Node
+                          </label>
+                      </div>
+                 </div>
+
+                  <div class="row">
+                      <div class="input-field col s12">
+                          <input placeholder="100000" 
+                             {{if eq .SubmissionError 3 4 5}} 
+                                class="invalid" 
+                             {{end}}
+                             id="amt" name="amt" type="text">
+
+                          <label for="amt" data-error="{{ if eq .SubmissionError 3 4 5}}{{printf "%v" .SubmissionError}}{{end}}">
+                              Channel Amount (in satoshis)
+                          </label>
+                      </div>
+                 </div>
+
+                  <div class="row">
+                      <div class="input-field col s12">
+                          <input placeholder="50000" 
+                             {{if eq .SubmissionError 6 7}} 
+                                class="invalid" 
+                             {{end}}
+                             id="bal" name="bal" type="text">
+                          <label for="bal" data-error="{{ if eq .SubmissionError 6 7}}{{printf "%v" .SubmissionError}}{{end}}">
+                              Initial Balance (in satoshis)
+                          </label>
+                      </div>
+                 </div>
+
+                  </br>
+
+                  <button class="btn-flat waves-effect waves-light" type="submit" name="action">Submit
+                    <i class="material-icons right">send</i>
+                  </button>
+              </form>
+          {{else}}
+              <span class="flow-text">Channel successfully created!</span> </br>
+              <span class="flow-text"> The broadcast funding transaction can be found 
+                  <a href="https://testnet.smartbit.com.au/tx/{{.ChannelTxid}}">
+                         here.
+                  </a>
+              </span> </br>
+              <span class="flow-text"> After {{.NumConfs}} {{if eq .NumConfs 1}}block is{{else}}blocks are {{end}} found on testnet, your channel will open. </span>
+              <div class="progress">
+                 <div class="indeterminate"></div>
+              </div>
+          {{end}}
+      </div>
+  </div>
+
+  <div class="col m3"> </div>
+
+</div>
+
+{{template "footer"}}

@@ -1,0 +1,63 @@
+hash: f172596ec3a846711ff01442d15b3b4b40c2f77b62cd58afc120fc6ec24624ac
+updated: 2017-01-18T17:47:53.245482562-08:00
+imports:
+- name: github.com/btcsuite/btcd
+  version: c2af640c95c017707191c4f16e02814e6bfc9e3f
+  subpackages:
+  - chaincfg/chainhash
+  - wire
+- name: github.com/davecgh/go-spew
+  version: 346938d642f2ec3594ed81d874461961cd0faa76
+  subpackages:
+  - spew
+- name: github.com/golang/protobuf
+  version: 8ee79997227bf9b34611aee7946ae64735e6fd93
+  subpackages:
+  - proto
+  - jsonpb
+  - protoc-gen-go/descriptor
+- name: github.com/gorilla/context
+  version: 08b5f424b9271eedf6f9f0ce86cb9396ed337a42
+- name: github.com/gorilla/mux
+  version: 392c28fe23e1c45ddba891b0320b3b5df220beea
+- name: github.com/grpc-ecosystem/grpc-gateway
+  version: a8f25bd1ab549f8b87afd48aa9181221e9d439bb
+  subpackages:
+  - runtime
+  - third_party/googleapis/google/api
+  - utilities
+  - runtime/internal
+- name: github.com/lightningnetwork/lnd
+  version: 40c7bac3aa280fade7e5a1d4746002cd5077e42b
+  subpackages:
+  - lnrpc
+- name: golang.org/x/crypto
+  version: b8a2a83acfe6e6770b75de42d5ff4c67596675c0
+  subpackages:
+  - acme/autocert
+  - acme
+- name: golang.org/x/net
+  version: f2499483f923065a842d38eb4c7f1927e6fc6e6d
+  subpackages:
+  - context
+  - http2
+  - trace
+  - context/ctxhttp
+  - http2/hpack
+  - idna
+  - lex/httplex
+  - internal/timeseries
+- name: google.golang.org/grpc
+  version: 708a7f9f3283aa2d4f6132d287d78683babe55c8
+  subpackages:
+  - codes
+  - grpclog
+  - credentials
+  - internal
+  - metadata
+  - naming
+  - stats
+  - tap
+  - transport
+  - peer
+testImports: []

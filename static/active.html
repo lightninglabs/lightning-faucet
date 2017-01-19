@@ -1,0 +1,17 @@
+{{template "header"}}
+
+KEk
+{{range .Channels}}
+    CHANNEL
+    {{.RemotePubkey}}          
+    {{.ChannelPoint}}         
+    {{.ChanId}}              
+    {{.Capacity}}           
+    {{.LocalBalance}}      
+    {{.RemoteBalance}}    
+    {{.TotalSatoshisSent}}    
+    {{.TotalSatoshisReceived}} 
+    {{.NumUpdates}}           
+{{end}}
+
+{{template "footer"}}
