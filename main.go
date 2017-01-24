@@ -106,10 +106,16 @@ func main() {
 	// the global http handler.
 	http.Handle("/", r)
 
-	// Crearte the auto-cert manager which will automatically obtain a
+	// Create a directory cache so the certs we get from Let's Encrypt are
+	// cached locally. This avoids running into their rate-limiting by
+	// requesting too many certs.
+	certCache := autocert.DirCache("certs")
+
+	// Create the auto-cert manager which will automatically obtain a
 	// certificate provided by Let's Encrypt.
 	m := autocert.Manager{
 		Prompt:     autocert.AcceptTOS,
+		Cache:      certCache,
 		HostPolicy: autocert.HostWhitelist("faucet.lightning.community"),
 	}
 

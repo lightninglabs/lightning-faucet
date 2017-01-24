@@ -155,6 +155,7 @@ type homePageContext struct {
 	// NodeAddr is the full <pubkey>@host:port where the faucet can be
 	// connect to.
 	NodeAddr string
+
 	// SubmissionError is a enum that stores if any error took place during
 	// the creation of a channel.
 	SubmissionError chanCreationError
