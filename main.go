@@ -80,12 +80,16 @@ func main() {
 		Funcs(customFuncs).
 		ParseGlob(templateGlobPattern))
 
-	// With the templates
+	// With the templates loaded, create the faucet itself.
 	faucet, err := newLightningFaucet(*lndNodes, faucetTemplates)
 	if err != nil {
 		log.Fatalf("unable to create faucet: %v", err)
 		return
 	}
+
+	// If we're not wiping all the channels, then we'll launch the set of
+	// goroutines required for the faucet to function.
+	faucet.Start()
 
 	// Create a new mux in order to route a request based on its path to a
 	// dedicated http.Handler.

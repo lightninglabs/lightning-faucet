@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -137,6 +138,154 @@ func newLightningFaucet(lndHost string,
 		lnd:       lnd,
 		templates: templates,
 	}, nil
+}
+
+// Start launches all the goroutines necessary for routine operation of the
+// lightning faucet.
+func (l *lightningFaucet) Start() {
+	go l.zombieChanSweeper()
+}
+
+// zombieChanSweeper is a goroutine that is tasked with cleaning up "zombie"
+// channels. A zombie channel is a channel in which the peer we have the
+// channel open with hasn't been online for greater than 48 hours. We'll
+// periodically perform a sweep every hour to close out any lingering zombie
+// channels.
+//
+// NOTE: This MUST be run as a goroutine.
+func (l *lightningFaucet) zombieChanSweeper() {
+	fmt.Println("zombie chan sweeper active")
+
+	// Any channel peer that hasn't been online in more than 48 hours past
+	// from now will have their channels closed out.
+	timeCutOff := time.Now().Add(-time.Hour * 48)
+
+	// Upon initial boot, we'll do a scan to close out any channels that
+	// are now considered zombies while we were down.
+	l.sweepZombieChans(timeCutOff)
+
+	// Every hour we'll consume a new tick and perform a sweep to close out
+	// any zombies channels.
+	zombieTicker := time.NewTicker(time.Hour * 1)
+	for _ = range zombieTicker.C {
+		log.Println("Performing zombie channel sweep!")
+
+		// In order to ensure we close out the proper channels, we also
+		// calculate the 48 hour offset from the point of our next
+		// tick.
+		timeCutOff = time.Now().Add(-time.Hour * 48)
+
+		// With the time cut off calculated, we'll force close any
+		// channels that are now considered "zombies".
+		l.sweepZombieChans(timeCutOff)
+	}
+}
+
+// strPointToChanPoint concerts a string outpoint (txid:index) into an lnrpc
+// ChannelPoint object.
+func strPointToChanPoint(stringPoint string) (*lnrpc.ChannelPoint, error) {
+	s := strings.Split(stringPoint, ":")
+
+	txid, err := hex.DecodeString(s[0])
+	if err != nil {
+		return nil, err
+	}
+
+	index, err := strconv.Atoi(s[1])
+	if err != nil {
+		return nil, err
+	}
+
+	return &lnrpc.ChannelPoint{
+		FundingTxid: txid,
+		OutputIndex: uint32(index),
+	}, nil
+}
+
+// sweepZombieChans performs a sweep of the set of channels that the faucet has
+// active to close out any channels that are now considered to be a "zombie". A
+// channel is a zombie if the peer with have the channel open is currently
+// offline, and we haven't detected them as being online since timeCutOff.
+//
+// TODO(roasbeef): after removing the node ANN on startup, will need to rely on
+// LinkNode information.
+func (l *lightningFaucet) sweepZombieChans(timeCutOff time.Time) {
+	// Fetch all the facuet's currently open channels.
+	openChanReq := &lnrpc.ListChannelsRequest{}
+	openChannels, err := l.lnd.ListChannels(ctxb, openChanReq)
+	if err != nil {
+		log.Println("unable to fetch open channels: %v", err)
+		return
+	}
+
+	for _, channel := range openChannels.Channels {
+		// For each channel we'll first fetch the announcement
+		// information for the peer that we have the channel open with.
+		nodeInfoResp, err := l.lnd.GetNodeInfo(ctxb,
+			&lnrpc.NodeInfoRequest{
+				PubKey: channel.RemotePubkey,
+			})
+		if err != nil {
+			log.Println("unable to get node pubkey: %v", err)
+			continue
+		}
+
+		// Convert the unix time stamp into a time.Time object.
+		lastSeen := time.Unix(int64(nodeInfoResp.Node.LastUpdate), 0)
+
+		// If the last time we saw this peer online was _before_ our
+		// time cutoff, and the peer isn't currently online, then we'll
+		// force close out the channel.
+		if lastSeen.Before(timeCutOff) && !channel.Active {
+			fmt.Println("ChannelPoint(%v) is a zombie, last seen: %v",
+				channel.ChannelPoint, lastSeen)
+
+			chanPoint, err := strPointToChanPoint(channel.ChannelPoint)
+			if err != nil {
+				log.Println("unable to get chan point: %v", err)
+				continue
+			}
+			txid, err := l.closeChannel(chanPoint, true)
+			if err != nil {
+				fmt.Println("unable to close zombie chan: %v", err)
+				continue
+			}
+
+			fmt.Println("closed zombie chan, txid: %v", txid)
+		}
+	}
+}
+
+// closeChannel closes out a target channel optionally executing a force close.
+// This function will block until the closing transaction has been broadcast.
+func (l *lightningFaucet) closeChannel(chanPoint *lnrpc.ChannelPoint,
+	force bool) (*chainhash.Hash, error) {
+
+	closeReq := &lnrpc.CloseChannelRequest{
+		ChannelPoint: chanPoint,
+		Force:        force,
+	}
+	stream, err := l.lnd.CloseChannel(ctxb, closeReq)
+	if err != nil {
+		fmt.Println("unable to start channel close: %v", err)
+	}
+
+	// Consume the first response which'll be sent once the closing
+	// transaction has been broadcast.
+	resp, err := stream.Recv()
+	if err != nil {
+		return nil, fmt.Errorf("unable to close chan: %v", err)
+	}
+
+	update, ok := resp.Update.(*lnrpc.CloseStatusUpdate_ClosePending)
+	if !ok {
+		return nil, fmt.Errorf("didn't get a pending update")
+	}
+
+	// Convert the raw bytes into a new chainhash so we gain access to its
+	// utility methods.
+	closingHash := update.ClosePending.Txid
+	return chainhash.NewHash(closingHash)
 }
 
 // homePageContext defines the initial context required for rendering home
