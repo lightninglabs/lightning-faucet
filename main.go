@@ -38,6 +38,14 @@ var (
 
 	// port is the port that the http server should listen on.
 	port = flag.String("port", "8080", "port to list for http")
+
+	// wipeChannels is a bool that indicates if all channels should be
+	// closed (either cooperatively or forcibly) on startup. If all
+	// channels are able to be closed, then the binary will exit upon
+	// success.
+	wipeChannels = flag.Bool("wipe_chans", false, "close all faucet"+
+		"channels and exit")
+
 	// domain is the target which will resolve to the IP address of the
 	// machine running the faucet. Setting this parameter properly is
 	// required in order for the free Let's Encrypt TSL certificate to
@@ -90,6 +98,19 @@ func main() {
 	faucet, err := newLightningFaucet(*lndNodes, faucetTemplates)
 	if err != nil {
 		log.Fatalf("unable to create faucet: %v", err)
+		return
+	}
+
+	// If the wipe channels bool is set, then we'll attempt to close ALL
+	// the faucet's channels by any means and exit in the case of a success
+	// or failure.
+	if *wipeChannels {
+		log.Println("Attempting to wipe all faucet channels")
+		if err := faucet.CloseAllChannels(); err != nil {
+			log.Fatalf("unable to close all the faucet's channels: %v", err)
+			return
+		}
+
 		return
 	}
 

@@ -559,3 +559,40 @@ func (l *lightningFaucet) activeChannels(w http.ResponseWriter, r *http.Request)
 
 func (l *lightningFaucet) pendingChannels(w http.ResponseWriter, r *http.Request) {
 }
+
+// CloseAllChannels attempt unconditionally close ALL of the faucet's currently
+// open channels. In the case that a channel is active a cooperative closure
+// will be executed, in the case that a channel is inactive, a force close will
+// be attempted.
+func (l *lightningFaucet) CloseAllChannels() error {
+	openChanReq := &lnrpc.ListChannelsRequest{}
+	openChannels, err := l.lnd.ListChannels(ctxb, openChanReq)
+	if err != nil {
+		return fmt.Errorf("unable to fetch open channels: %v", err)
+	}
+
+	for _, channel := range openChannels.Channels {
+		fmt.Println("Attempting to close channel: %c", channel.ChannelPoint)
+
+		chanPoint, err := strPointToChanPoint(channel.ChannelPoint)
+		if err != nil {
+			log.Println("unable to get chan point: %v", err)
+			continue
+		}
+
+		forceClose := !channel.Active
+		if forceClose {
+			log.Println("Attempting force close")
+		}
+
+		closeTxid, err := l.closeChannel(chanPoint, forceClose)
+		if err != nil {
+			log.Println("unable to close channel: %v", err)
+			continue
+		}
+
+		log.Println("closing txid: ", closeTxid)
+	}
+
+	return nil
+}
