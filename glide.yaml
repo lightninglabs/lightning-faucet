@@ -1,4 +1,4 @@
-package: github.com/lightninglabs/discharge
+package: github.com/lightninglabs/lightning-faucet
 import:
 - package: github.com/btcsuite/btcd
   subpackages:
@@ -11,7 +11,7 @@ import:
 - package: github.com/gorilla/mux
   version: ^1.3.0
 - package: github.com/lightningnetwork/lnd
-  version: ^0.1.1-alpha
+  version: 157145df65483202f805fe6912fbff8b419dade1
   subpackages:
   - lnrpc
 - package: golang.org/x/crypto
@@ -19,3 +19,6 @@ import:
   - acme/autocert
 - package: google.golang.org/grpc
   version: ^1.0.5
+- package: google.golang.org/genproto
+  subpackages:
+  - googleapis/api/annotations

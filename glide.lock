@@ -1,8 +1,8 @@
-hash: f172596ec3a846711ff01442d15b3b4b40c2f77b62cd58afc120fc6ec24624ac
-updated: 2017-01-18T17:47:53.245482562-08:00
+hash: 5c5233b5e442abd48eb9d6e4a08f3ec006e61d87f757fc8e459424e09c7184a5
+updated: 2017-04-02T11:49:52.739591136+02:00
 imports:
 - name: github.com/btcsuite/btcd
-  version: c2af640c95c017707191c4f16e02814e6bfc9e3f
+  version: 4b348c1d33373d672edd83fc576892d0e46686d2
   subpackages:
   - chaincfg/chainhash
   - wire
@@ -11,53 +11,64 @@ imports:
   subpackages:
   - spew
 - name: github.com/golang/protobuf
-  version: 8ee79997227bf9b34611aee7946ae64735e6fd93
+  version: 2bba0603135d7d7f5cb73b2125beeda19c09f4ef
   subpackages:
-  - proto
   - jsonpb
+  - proto
   - protoc-gen-go/descriptor
 - name: github.com/gorilla/context
   version: 08b5f424b9271eedf6f9f0ce86cb9396ed337a42
 - name: github.com/gorilla/mux
   version: 392c28fe23e1c45ddba891b0320b3b5df220beea
 - name: github.com/grpc-ecosystem/grpc-gateway
-  version: a8f25bd1ab549f8b87afd48aa9181221e9d439bb
+  version: 18d159699f2e83fc5bb9ef2f79465ca3f3122676
   subpackages:
   - runtime
-  - third_party/googleapis/google/api
-  - utilities
   - runtime/internal
+  - utilities
 - name: github.com/lightningnetwork/lnd
-  version: 40c7bac3aa280fade7e5a1d4746002cd5077e42b
+  version: 157145df65483202f805fe6912fbff8b419dade1
   subpackages:
   - lnrpc
 - name: golang.org/x/crypto
-  version: b8a2a83acfe6e6770b75de42d5ff4c67596675c0
+  version: 3cb07270c9455e8ad27956a70891c962d121a228
   subpackages:
-  - acme/autocert
   - acme
+  - acme/autocert
 - name: golang.org/x/net
-  version: f2499483f923065a842d38eb4c7f1927e6fc6e6d
+  version: ffcf1bedda3b04ebb15a168a59800a73d6dc0f4d
   subpackages:
   - context
-  - http2
-  - trace
   - context/ctxhttp
+  - http2
   - http2/hpack
   - idna
-  - lex/httplex
   - internal/timeseries
+  - lex/httplex
+  - trace
+- name: golang.org/x/text
+  version: f4b4367115ec2de254587813edaa901bc1c723a8
+  subpackages:
+  - secure/bidirule
+  - transform
+  - unicode/bidi
+  - unicode/norm
+- name: google.golang.org/genproto
+  version: de9f5e90fe9b278809363f08c2072d2f2a429de7
+  subpackages:
+  - googleapis/api/annotations
 - name: google.golang.org/grpc
-  version: 708a7f9f3283aa2d4f6132d287d78683babe55c8
+  version: cdee119ee21e61eef7093a41ba148fa83585e143
   subpackages:
   - codes
-  - grpclog
   - credentials
+  - grpclog
   - internal
+  - keepalive
   - metadata
   - naming
+  - peer
   - stats
   - tap
   - transport
-  - peer
 testImports: []
