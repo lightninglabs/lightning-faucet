@@ -38,6 +38,12 @@ var (
 
 	// port is the port that the http server should listen on.
 	port = flag.String("port", "8080", "port to list for http")
+	// domain is the target which will resolve to the IP address of the
+	// machine running the faucet. Setting this parameter properly is
+	// required in order for the free Let's Encrypt TSL certificate to
+	// work.
+	domain = flag.String("domain", "faucet.lightning.community", "the "+
+		"domain of the faucet, required for TLS")
 )
 
 // equal reports whether the first argument is equal to any of the remaining
@@ -120,7 +126,7 @@ func main() {
 	m := autocert.Manager{
 		Prompt:     autocert.AcceptTOS,
 		Cache:      certCache,
-		HostPolicy: autocert.HostWhitelist("faucet.lightning.community"),
+		HostPolicy: autocert.HostWhitelist(*domain),
 	}
 
 	// As we'd like all requests to default to https, redirect all regular
