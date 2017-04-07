@@ -11,7 +11,7 @@ import:
 - package: github.com/gorilla/mux
   version: ^1.3.0
 - package: github.com/lightningnetwork/lnd
-  version: 157145df65483202f805fe6912fbff8b419dade1
+  version: 55e0dd32c65bcc8cfeddf060b14a9c1665437a17
   subpackages:
   - lnrpc
 - package: golang.org/x/crypto
