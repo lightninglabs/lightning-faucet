@@ -1,4 +1,5 @@
 ## Lightning Network Faucet
+
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)]
 (https://github.com/lightninglabs/lightning-faucet/blob/master/LICENSE) 
 &nbsp;&nbsp;&nbsp;&nbsp;
