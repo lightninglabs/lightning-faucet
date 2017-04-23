@@ -186,7 +186,7 @@ func (l *lightningFaucet) zombieChanSweeper() {
 func strPointToChanPoint(stringPoint string) (*lnrpc.ChannelPoint, error) {
 	s := strings.Split(stringPoint, ":")
 
-	txid, err := hex.DecodeString(s[0])
+	txid, err := chainhash.NewHashFromStr(s[0])
 	if err != nil {
 		return nil, err
 	}
@@ -197,7 +197,7 @@ func strPointToChanPoint(stringPoint string) (*lnrpc.ChannelPoint, error) {
 	}
 
 	return &lnrpc.ChannelPoint{
-		FundingTxid: txid,
+		FundingTxid: txid[:],
 		OutputIndex: uint32(index),
 	}, nil
 }
