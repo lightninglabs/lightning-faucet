@@ -5,7 +5,7 @@
   <div class="col m3"> </div>
   <div class="center col s12 m6">
       <a href="/">
-          <h1 id="title" class="flow-text">Testnet Lightning Network Faucet</h1>
+          <h1 id="title" class="flow-text">{{ if eq .Network "bitcoin" }} Bitcoin {{else}} Litecoin {{end}} Testnet Lightning Network Faucet</h1>
       </a>
       <ul class="collection">
           <li class="collection-item">{{ .NodeAddr }}</li>
@@ -21,7 +21,7 @@
   <div class="center col m6">
       <div class="chan-form card-panel hoverable">
           {{if eq .ChannelTxid ""}}
-              <h6 class="flow-text">{{ .NumCoins }} BTC are available for channel creation. </h6>
+          <h6 class="flow-text">{{ .NumCoins }} {{ if eq .Network "bitcoin" }} BTC {{else}} LTC {{end}} are available for channel creation. </h6>
               <h6 class="flow-text">The faucet has {{ .NumChannels }} active {{if eq .NumChannels 1}} channel {{else}} channels {{end}} on the network. </h6>
               <h6 class="flow-text">The max channel size is 4 million satoshis. </h6>
 

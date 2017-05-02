@@ -52,6 +52,11 @@ var (
 	// work.
 	domain = flag.String("domain", "faucet.lightning.community", "the "+
 		"domain of the faucet, required for TLS")
+
+	// network is the network the faucet is running on. This value must
+	// either be "litecoin" or "bitcoin".
+	network = flag.String("network", "bitcoin", "the network of the "+
+		"faucet")
 )
 
 // equal reports whether the first argument is equal to any of the remaining
@@ -95,7 +100,7 @@ func main() {
 		ParseGlob(templateGlobPattern))
 
 	// With the templates loaded, create the faucet itself.
-	faucet, err := newLightningFaucet(*lndNodes, faucetTemplates)
+	faucet, err := newLightningFaucet(*lndNodes, faucetTemplates, *network)
 	if err != nil {
 		log.Fatalf("unable to create faucet: %v", err)
 		return

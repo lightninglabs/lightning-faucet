@@ -113,6 +113,8 @@ type lightningFaucet struct {
 
 	templates *template.Template
 
+	network string
+
 	openChanMtx  sync.RWMutex
 	openChannels map[wire.OutPoint]time.Time
 }
@@ -120,7 +122,7 @@ type lightningFaucet struct {
 // newLightningFaucet creates a new channel faucet that's bound to a cluster of
 // lnd nodes, and uses the passed templates to render the web page.
 func newLightningFaucet(lndHost string,
-	templates *template.Template) (*lightningFaucet, error) {
+	templates *template.Template, network string) (*lightningFaucet, error) {
 
 	// First attempt to establish a connection to lnd's RPC sever.
 	opts := []grpc.DialOption{grpc.WithInsecure()}
@@ -137,6 +139,7 @@ func newLightningFaucet(lndHost string,
 	return &lightningFaucet{
 		lnd:       lnd,
 		templates: templates,
+		network:   network,
 	}, nil
 }
 
@@ -317,6 +320,9 @@ type homePageContext struct {
 	// NumConfs is the number of confirmations required for the channel to
 	// open up.
 	NumConfs uint32
+
+	// Network is the network the faucet is running on.
+	Network string
 }
 
 // fetchHomeState is helper functions that populates the homePageContext with
