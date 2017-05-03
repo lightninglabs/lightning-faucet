@@ -1,10 +1,8 @@
 ## Lightning Network Faucet
 
-[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)]
-(https://github.com/lightninglabs/lightning-faucet/blob/master/LICENSE) 
+[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/lightninglabs/lightning-faucet/blob/master/LICENSE) 
 &nbsp;&nbsp;&nbsp;&nbsp;
-[![Irc](https://img.shields.io/badge/chat-on%20freenode-brightgreen.svg)]
-(https://webchat.freenode.net/?channels=lnd) 
+[![Irc](https://img.shields.io/badge/chat-on%20freenode-brightgreen.svg)](https://webchat.freenode.net/?channels=lnd) 
 
 The Lightning Network Faucet is a faucet that is currently deployed on Bitcon's
 testnet at: https://faucet.lightning.community. 
