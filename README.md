@@ -4,9 +4,11 @@
 &nbsp;&nbsp;&nbsp;&nbsp;
 [![Irc](https://img.shields.io/badge/chat-on%20freenode-brightgreen.svg)](https://webchat.freenode.net/?channels=lnd) 
 
-The Lightning Network Faucet is a faucet that is currently deployed on Bitcon's
-testnet at: https://faucet.lightning.community. 
+The Lightning Network Faucet is a faucet that is currently deployed on the
+Bitcoin and Litecoin testnets.
 
+- Bitcoin: https://faucet.lightning.community
+- Litecoin: https://ltc.faucet.lightning.community
 
 The Testnet Lightning Faucet (TLF) is similar to other existing Bitcoin
 faucets.  However, rather then sending bitcoin directly on-chain to a user of
