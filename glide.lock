@@ -1,45 +1,53 @@
-hash: 5c5233b5e442abd48eb9d6e4a08f3ec006e61d87f757fc8e459424e09c7184a5
-updated: 2017-04-02T11:49:52.739591136+02:00
+hash: 892834eb7c544585b6ebebb10380ba0065c2a04f5630d972867450325f426bda
+updated: 2017-07-06T14:08:20.999603363-07:00
 imports:
 - name: github.com/btcsuite/btcd
-  version: 4b348c1d33373d672edd83fc576892d0e46686d2
+  version: 9822ffad6802d3b902442b727a238230194d961f
   subpackages:
+  - btcec
+  - chaincfg
   - chaincfg/chainhash
   - wire
+- name: github.com/btcsuite/btcutil
+  version: dcd4997b0664bcfd6ef48e4ae9da8396e08b1cd9
+  subpackages:
+  - base58
 - name: github.com/davecgh/go-spew
   version: 346938d642f2ec3594ed81d874461961cd0faa76
   subpackages:
   - spew
 - name: github.com/golang/protobuf
-  version: 2bba0603135d7d7f5cb73b2125beeda19c09f4ef
+  version: fec3b39b059c0f88fa6b20f5ed012b1aa203a8b4
   subpackages:
   - jsonpb
   - proto
   - protoc-gen-go/descriptor
+  - ptypes/any
+  - ptypes/struct
 - name: github.com/gorilla/context
   version: 08b5f424b9271eedf6f9f0ce86cb9396ed337a42
 - name: github.com/gorilla/mux
-  version: 392c28fe23e1c45ddba891b0320b3b5df220beea
+  version: bcd8bc72b08df0f70df986b97f95590779502d31
 - name: github.com/grpc-ecosystem/grpc-gateway
-  version: 18d159699f2e83fc5bb9ef2f79465ca3f3122676
+  version: a8f25bd1ab549f8b87afd48aa9181221e9d439bb
   subpackages:
   - runtime
   - runtime/internal
   - utilities
 - name: github.com/lightningnetwork/lnd
-  version: 157145df65483202f805fe6912fbff8b419dade1
+  version: dc0ab06d9119b97598595dcb9431904197500c69
   subpackages:
   - lnrpc
 - name: golang.org/x/crypto
-  version: 3cb07270c9455e8ad27956a70891c962d121a228
+  version: 122d919ec1efcfb58483215da23f815853e24b81
   subpackages:
   - acme
   - acme/autocert
+  - ripemd160
 - name: golang.org/x/net
-  version: ffcf1bedda3b04ebb15a168a59800a73d6dc0f4d
+  version: 513929065c19401a1c7b76ecd942f9f86a0c061b
   subpackages:
   - context
-  - context/ctxhttp
   - http2
   - http2/hpack
   - idna
@@ -47,21 +55,23 @@ imports:
   - lex/httplex
   - trace
 - name: golang.org/x/text
-  version: f4b4367115ec2de254587813edaa901bc1c723a8
+  version: 19e51611da83d6be54ddafce4a4af510cb3e9ea4
   subpackages:
   - secure/bidirule
   - transform
   - unicode/bidi
   - unicode/norm
 - name: google.golang.org/genproto
-  version: de9f5e90fe9b278809363f08c2072d2f2a429de7
+  version: bb3573be0c484136831138976d444b8754777aff
   subpackages:
   - googleapis/api/annotations
+  - googleapis/rpc/status
 - name: google.golang.org/grpc
-  version: cdee119ee21e61eef7093a41ba148fa83585e143
+  version: b15215fb911b24a5d61d57feec4233d610530464
   subpackages:
   - codes
   - credentials
+  - grpclb/grpc_lb_v1
   - grpclog
   - internal
   - keepalive
@@ -69,6 +79,7 @@ imports:
   - naming
   - peer
   - stats
+  - status
   - tap
   - transport
 testImports: []
