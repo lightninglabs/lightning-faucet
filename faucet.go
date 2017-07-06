@@ -13,6 +13,7 @@ import (
 
 	"github.com/btcsuite/btcd/chaincfg/chainhash"
 	"github.com/btcsuite/btcd/wire"
+	"github.com/btcsuite/btcutil"
 	"github.com/davecgh/go-spew/spew"
 	"github.com/lightningnetwork/lnd/lnrpc"
 	"google.golang.org/grpc"
@@ -347,7 +348,7 @@ func (l *lightningFaucet) fetchHomeState() (*homePageContext, error) {
 
 	nodeAddr := fmt.Sprintf("%v@%v", nodeInfo.IdentityPubkey, *lndIP)
 	return &homePageContext{
-		NumCoins:    walletBalance.Balance,
+		NumCoins:    btcutil.Amount(walletBalance.Balance).ToBTC(),
 		NumChannels: nodeInfo.NumActiveChannels,
 		NodeAddr:    nodeAddr,
 		NumConfs:    1,
