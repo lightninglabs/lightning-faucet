@@ -352,6 +352,7 @@ func (l *lightningFaucet) fetchHomeState() (*homePageContext, error) {
 		NumChannels: nodeInfo.NumActiveChannels,
 		NodeAddr:    nodeAddr,
 		NumConfs:    1,
+		Network:     l.network,
 	}, nil
 }
 
