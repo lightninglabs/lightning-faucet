@@ -22,7 +22,7 @@ import (
 const (
 	// maxChannelSize is the larget channel that the faucet will create to
 	// another peer.
-	maxChannelSize int64 = 4000000
+	maxChannelSize int64 = (1 << 24)
 
 	// minChannelSize is the smallest channel that the faucet will extend
 	// to a peer.

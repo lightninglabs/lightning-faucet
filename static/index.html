@@ -23,7 +23,7 @@
           {{if eq .ChannelTxid ""}}
           <h6 class="flow-text">{{ .NumCoins }} {{ if eq .Network "bitcoin" }} BTC {{else}} LTC {{end}} are available for channel creation. </h6>
               <h6 class="flow-text">The faucet has {{ .NumChannels }} active {{if eq .NumChannels 1}} channel {{else}} channels {{end}} on the network. </h6>
-              <h6 class="flow-text">The max channel size is 4 million satoshis. </h6>
+              <h6 class="flow-text">The max channel size is 16 million satoshis. </h6>
 
               {{ if eq .SubmissionError 8 }}
                   <h6 class="flow-text red">Channel already open with node.</h6>
