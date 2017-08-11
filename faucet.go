@@ -26,7 +26,7 @@ const (
 
 	// minChannelSize is the smallest channel that the faucet will extend
 	// to a peer.
-	minChannelSize int64 = 10000
+	minChannelSize int64 = 50000
 )
 
 // chanCreationError is an enum which describes the exact nature of an error
@@ -89,7 +89,8 @@ func (c chanCreationError) String() string {
 	case ChannelTooLarge:
 		return "channel value is too large"
 	case ChannelTooSmall:
-		return "channel value is too small (min is 10k sat)"
+		return fmt.Sprintf("min channel size is is %x sat",
+			minChannelSize)
 	case PushIncorrect:
 		return "push amount is incorrect"
 	case ChannelOpenFail:
