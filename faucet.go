@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"sync"
@@ -17,6 +18,7 @@ import (
 	"github.com/davecgh/go-spew/spew"
 	"github.com/lightningnetwork/lnd/lnrpc"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 )
 
 const (
@@ -27,6 +29,12 @@ const (
 	// minChannelSize is the smallest channel that the faucet will extend
 	// to a peer.
 	minChannelSize int64 = 50000
+)
+
+var (
+	lndHomeDir             = btcutil.AppDataDir("lnd", false)
+	defaultTLSCertFilename = "tls.cert"
+	tlsCertPath            = filepath.Join(lndHomeDir, defaultTLSCertFilename)
 )
 
 // chanCreationError is an enum which describes the exact nature of an error
@@ -127,7 +135,11 @@ func newLightningFaucet(lndHost string,
 	templates *template.Template, network string) (*lightningFaucet, error) {
 
 	// First attempt to establish a connection to lnd's RPC sever.
-	opts := []grpc.DialOption{grpc.WithInsecure()}
+	creds, err := credentials.NewClientTLSFromFile(tlsCertPath, "")
+	if err != nil {
+		return nil, fmt.Errorf("unable to read cert file: %v", err)
+	}
+	opts := []grpc.DialOption{grpc.WithTransportCredentials(creds)}
 	conn, err := grpc.Dial(*lndNodes, opts...)
 	if err != nil {
 		return nil, fmt.Errorf("unable to dial to lnd's gRPC server: ",
