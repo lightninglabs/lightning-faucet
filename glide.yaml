@@ -1,6 +1,6 @@
 package: github.com/lightninglabs/lightning-faucet
 import:
-- package: github.com/btcsuite/btcd
+- package: github.com/roasbeef/btcd
   subpackages:
   - chaincfg/chainhash
   - wire

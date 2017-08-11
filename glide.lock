@@ -1,18 +1,12 @@
-hash: 892834eb7c544585b6ebebb10380ba0065c2a04f5630d972867450325f426bda
-updated: 2017-08-10T19:00:20.687099758-07:00
+hash: 7b9a28ad95833bc9f74f647dc184d2fab76e9055baaa5e9c6ff71fc88d136475
+updated: 2017-08-10T19:05:24.083199305-07:00
 imports:
-- name: github.com/btcsuite/btcd
-  version: 1e331153b4baf5cd161e38ebe35d2fe86ccd02dd
+- name: github.com/btcsuite/fastsha256
+  version: 637e656429416087660c84436a2a035d69d54e2e
+- name: github.com/btcsuite/golangcrypto
+  version: 53f62d9b43e87a6c56975cf862af7edf33a8d0df
   subpackages:
-  - btcec
-  - chaincfg
-  - chaincfg/chainhash
-  - wire
-- name: github.com/btcsuite/btcutil
-  version: 501929d3d046174c3d39f0ea54ece471aa17238c
-  subpackages:
-  - base58
-  - bech32
+  - ripemd160
 - name: github.com/davecgh/go-spew
   version: 346938d642f2ec3594ed81d874461961cd0faa76
   subpackages:
@@ -39,12 +33,26 @@ imports:
   version: dc0ab06d9119b97598595dcb9431904197500c69
   subpackages:
   - lnrpc
+- name: github.com/roasbeef/btcd
+  version: 34fdda7d41cc47d9456550fd1147a77db89f601a
+  subpackages:
+  - btcec
+  - chaincfg
+  - chaincfg/chainhash
+  - wire
+- name: github.com/roasbeef/btcutil
+  version: a259eaf2ec1b54653cdd67848a41867f280797ee
+  subpackages:
+  - base58
+  - bloom
+  - coinset
+  - hdkeychain
+  - txsort
 - name: golang.org/x/crypto
   version: 122d919ec1efcfb58483215da23f815853e24b81
   subpackages:
   - acme
   - acme/autocert
-  - ripemd160
 - name: golang.org/x/net
   version: 513929065c19401a1c7b76ecd942f9f86a0c061b
   subpackages:
