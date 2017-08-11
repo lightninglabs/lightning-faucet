@@ -1,17 +1,18 @@
 hash: 892834eb7c544585b6ebebb10380ba0065c2a04f5630d972867450325f426bda
-updated: 2017-07-06T14:08:20.999603363-07:00
+updated: 2017-08-10T19:00:20.687099758-07:00
 imports:
 - name: github.com/btcsuite/btcd
-  version: 9822ffad6802d3b902442b727a238230194d961f
+  version: 1e331153b4baf5cd161e38ebe35d2fe86ccd02dd
   subpackages:
   - btcec
   - chaincfg
   - chaincfg/chainhash
   - wire
 - name: github.com/btcsuite/btcutil
-  version: dcd4997b0664bcfd6ef48e4ae9da8396e08b1cd9
+  version: 501929d3d046174c3d39f0ea54ece471aa17238c
   subpackages:
   - base58
+  - bech32
 - name: github.com/davecgh/go-spew
   version: 346938d642f2ec3594ed81d874461961cd0faa76
   subpackages:
@@ -67,7 +68,7 @@ imports:
   - googleapis/api/annotations
   - googleapis/rpc/status
 - name: google.golang.org/grpc
-  version: b15215fb911b24a5d61d57feec4233d610530464
+  version: b8669c35455183da6d5c474ea6e72fbf55183274
   subpackages:
   - codes
   - credentials
