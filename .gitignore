@@ -28,5 +28,5 @@ _testmain.go
 **.swp
 
 
-vendor
+vendor/
 *.idea
