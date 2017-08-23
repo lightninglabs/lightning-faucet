@@ -1,6 +1,8 @@
-hash: 7b9a28ad95833bc9f74f647dc184d2fab76e9055baaa5e9c6ff71fc88d136475
-updated: 2017-08-10T19:05:24.083199305-07:00
+hash: 961cadcde2b32bd49dcb1a9ed967f779a5872a1841d621efe6cfdeb9e8a628da
+updated: 2017-08-22T19:02:54.802471344-07:00
 imports:
+- name: github.com/boltdb/bolt
+  version: 2f1ce7a837dcb8da3ec595b1dac9d0632f0f99e8
 - name: github.com/btcsuite/fastsha256
   version: 637e656429416087660c84436a2a035d69d54e2e
 - name: github.com/btcsuite/golangcrypto
@@ -24,15 +26,18 @@ imports:
 - name: github.com/gorilla/mux
   version: bcd8bc72b08df0f70df986b97f95590779502d31
 - name: github.com/grpc-ecosystem/grpc-gateway
-  version: a8f25bd1ab549f8b87afd48aa9181221e9d439bb
+  version: f2862b476edcef83412c7af8687c9cd8e4097c0f
   subpackages:
   - runtime
   - runtime/internal
   - utilities
+- name: github.com/juju/loggo
+  version: 8232ab8918d91c72af1a9fb94d3edbe31d88b790
 - name: github.com/lightningnetwork/lnd
-  version: dc0ab06d9119b97598595dcb9431904197500c69
+  version: 90a03954b252c382b0dd5a4317d38d967e6673d0
   subpackages:
   - lnrpc
+  - macaroons
 - name: github.com/roasbeef/btcd
   version: 34fdda7d41cc47d9456550fd1147a77db89f601a
   subpackages:
@@ -48,11 +53,18 @@ imports:
   - coinset
   - hdkeychain
   - txsort
+- name: github.com/rogpeppe/fastuuid
+  version: 6724a57986aff9bff1a1770e9347036def7c89f6
 - name: golang.org/x/crypto
   version: 122d919ec1efcfb58483215da23f815853e24b81
   subpackages:
   - acme
   - acme/autocert
+  - curve25519
+  - nacl/box
+  - nacl/secretbox
+  - poly1305
+  - salsa20/salsa
 - name: golang.org/x/net
   version: 513929065c19401a1c7b76ecd942f9f86a0c061b
   subpackages:
@@ -63,6 +75,10 @@ imports:
   - internal/timeseries
   - lex/httplex
   - trace
+- name: golang.org/x/sys
+  version: e62c3de784db939836898e5c19ffd41bece347da
+  subpackages:
+  - unix
 - name: golang.org/x/text
   version: 19e51611da83d6be54ddafce4a4af510cb3e9ea4
   subpackages:
@@ -76,9 +92,10 @@ imports:
   - googleapis/api/annotations
   - googleapis/rpc/status
 - name: google.golang.org/grpc
-  version: b8669c35455183da6d5c474ea6e72fbf55183274
+  version: b3ddf786825de56a4178401b7e174ee332173b66
   subpackages:
   - codes
+  - connectivity
   - credentials
   - grpclb/grpc_lb_v1
   - grpclog
@@ -91,4 +108,13 @@ imports:
   - status
   - tap
   - transport
+- name: gopkg.in/errgo.v1
+  version: 442357a80af5c6bf9b6d51ae791a39c3421004f3
+- name: gopkg.in/macaroon-bakery.v1
+  version: 8e14f8b0f5e286ad100ca8d6ce5bde0f0dfb8b21
+  subpackages:
+  - bakery
+  - bakery/checkers
+- name: gopkg.in/macaroon.v1
+  version: d8fd13e6951f2ce46f0964a58149cf2f103cac9a
 testImports: []
