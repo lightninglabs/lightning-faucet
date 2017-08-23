@@ -4,16 +4,22 @@ import (
 	"encoding/hex"
 	"fmt"
 	"html/template"
+	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
 
+	"gopkg.in/macaroon-bakery.v1/bakery/checkers"
+	macaroon "gopkg.in/macaroon.v1"
+
 	"github.com/davecgh/go-spew/spew"
 	"github.com/lightningnetwork/lnd/lnrpc"
+	"github.com/lightningnetwork/lnd/macaroons"
 	"github.com/roasbeef/btcd/chaincfg/chainhash"
 	"github.com/roasbeef/btcd/wire"
 	"github.com/roasbeef/btcutil"
@@ -35,6 +41,9 @@ var (
 	lndHomeDir             = btcutil.AppDataDir("lnd", false)
 	defaultTLSCertFilename = "tls.cert"
 	tlsCertPath            = filepath.Join(lndHomeDir, defaultTLSCertFilename)
+
+	defaultMacaroonFilename = "admin.macaroon"
+	defaultMacaroonPath     = filepath.Join(lndHomeDir, defaultMacaroonFilename)
 )
 
 // chanCreationError is an enum which describes the exact nature of an error
@@ -140,6 +149,38 @@ func newLightningFaucet(lndHost string,
 		return nil, fmt.Errorf("unable to read cert file: %v", err)
 	}
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(creds)}
+
+	// Load the specified macaroon file.
+	macPath := cleanAndExpandPath(defaultMacaroonPath)
+	macBytes, err := ioutil.ReadFile(macPath)
+	if err != nil {
+		return nil, err
+	}
+	mac := &macaroon.Macaroon{}
+	if err = mac.UnmarshalBinary(macBytes); err != nil {
+		return nil, err
+	}
+
+	// We add a time-based constraint to prevent replay of the macaroon.
+	// It's good for 60 seconds by default to make up for any discrepancy
+	// between client and server clocks, but leaking the macaroon before it
+	// becomes invalid makes it possible for an attacker to reuse the
+	// macaroon. In addition, the validity time of the macaroon is extended
+	// by the time the server clock is behind the client clock, or
+	// shortened by the time the server clock is ahead of the client clock
+	// (or invalid altogether if, in the latter case, this time is more
+	// than 60 seconds).
+	macaroonTimeout := time.Duration(60)
+	requestTimeout := time.Now().Add(time.Second * macaroonTimeout)
+	timeCaveat := checkers.TimeBeforeCaveat(requestTimeout)
+	mac.AddFirstPartyCaveat(timeCaveat.Condition)
+
+	// Now we append the macaroon credentials to the dial options.
+	opts = append(
+		opts,
+		grpc.WithPerRPCCredentials(macaroons.NewMacaroonCredential(mac)),
+	)
+
 	conn, err := grpc.Dial(*lndNodes, opts...)
 	if err != nil {
 		return nil, fmt.Errorf("unable to dial to lnd's gRPC server: ",
@@ -616,4 +657,19 @@ func (l *lightningFaucet) CloseAllChannels() error {
 	}
 
 	return nil
+}
+
+// cleanAndExpandPath expands environment variables and leading ~ in the passed
+// path, cleans the result, and returns it.
+// This function is taken from https://github.com/btcsuite/btcd
+func cleanAndExpandPath(path string) string {
+	// Expand initial ~ to OS specific home directory.
+	if strings.HasPrefix(path, "~") {
+		homeDir := filepath.Dir(lndHomeDir)
+		path = strings.Replace(path, "~", homeDir, 1)
+	}
+
+	// NOTE: The os.ExpandEnv doesn't work with Windows-style %VARIABLE%,
+	// but the variables can still be expanded via POSIX-style $VARIABLE.
+	return filepath.Clean(os.ExpandEnv(path))
 }
