@@ -14,7 +14,6 @@ import (
 	"sync"
 	"time"
 
-	"gopkg.in/macaroon-bakery.v1/bakery/checkers"
 	macaroon "gopkg.in/macaroon.v1"
 
 	"github.com/davecgh/go-spew/spew"
@@ -160,20 +159,6 @@ func newLightningFaucet(lndHost string,
 	if err = mac.UnmarshalBinary(macBytes); err != nil {
 		return nil, err
 	}
-
-	// We add a time-based constraint to prevent replay of the macaroon.
-	// It's good for 60 seconds by default to make up for any discrepancy
-	// between client and server clocks, but leaking the macaroon before it
-	// becomes invalid makes it possible for an attacker to reuse the
-	// macaroon. In addition, the validity time of the macaroon is extended
-	// by the time the server clock is behind the client clock, or
-	// shortened by the time the server clock is ahead of the client clock
-	// (or invalid altogether if, in the latter case, this time is more
-	// than 60 seconds).
-	macaroonTimeout := time.Duration(60)
-	requestTimeout := time.Now().Add(time.Second * macaroonTimeout)
-	timeCaveat := checkers.TimeBeforeCaveat(requestTimeout)
-	mac.AddFirstPartyCaveat(timeCaveat.Condition)
 
 	// Now we append the macaroon credentials to the dial options.
 	opts = append(
