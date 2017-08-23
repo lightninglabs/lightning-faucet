@@ -575,7 +575,6 @@ func (l *lightningFaucet) openChannel(homeTemplate *template.Template,
 		NodePubkey:         nodePub,
 		LocalFundingAmount: chanSize,
 		PushSat:            pushAmt,
-		NumConfs:           1,
 	}
 	log.Printf("attempting to create channel with params: %v",
 		spew.Sdump(openChanReq))
