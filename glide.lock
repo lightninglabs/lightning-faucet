@@ -39,7 +39,7 @@ imports:
   - lnrpc
   - macaroons
 - name: github.com/roasbeef/btcd
-  version: 34fdda7d41cc47d9456550fd1147a77db89f601a
+  version: a64d018fd91151b842522d64771610712565d30a
   subpackages:
   - btcec
   - chaincfg
