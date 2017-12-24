@@ -390,7 +390,7 @@ func (l *lightningFaucet) fetchHomeState() (*homePageContext, error) {
 		NumCoins:    btcutil.Amount(walletBalance.Balance).ToBTC(),
 		NumChannels: nodeInfo.NumActiveChannels,
 		NodeAddr:    nodeAddr,
-		NumConfs:    1,
+		NumConfs:    3,
 		Network:     l.network,
 	}, nil
 }
