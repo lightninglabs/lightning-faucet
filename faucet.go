@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -344,6 +345,10 @@ type homePageContext struct {
 	// open at a given time.
 	NumChannels uint32
 
+	// GitCommitHash is the git HEAD's commit hash of
+	// $GOPATH/src/github.com/lightningnetwork/lnd
+	GitCommitHash string
+
 	// NodeAddr is the full <pubkey>@host:port where the faucet can be
 	// connect to.
 	NodeAddr string
@@ -385,10 +390,18 @@ func (l *lightningFaucet) fetchHomeState() (*homePageContext, error) {
 		return nil, err
 	}
 
+	cmd := exec.Command("git", "log", "--pretty=format:'%H'", "-n", "1")
+	cmd.Dir = os.Getenv("GOPATH") + "/src/github.com/lightningnetwork/lnd"
+	gitHash, err := cmd.Output()
+	if err != nil {
+		gitHash = []byte{}
+	}
+
 	nodeAddr := fmt.Sprintf("%v@%v", nodeInfo.IdentityPubkey, *lndIP)
 	return &homePageContext{
 		NumCoins:    btcutil.Amount(walletBalance.Balance).ToBTC(),
 		NumChannels: nodeInfo.NumActiveChannels,
+		GitCommitHash: strings.Replace(string(gitHash), "'", "", -1),
 		NodeAddr:    nodeAddr,
 		NumConfs:    3,
 		Network:     l.network,
