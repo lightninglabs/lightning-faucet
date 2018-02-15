@@ -14,7 +14,7 @@ import (
 	"sync"
 	"time"
 
-	macaroon "gopkg.in/macaroon.v1"
+	macaroon "gopkg.in/macaroon.v2"
 
 	"github.com/davecgh/go-spew/spew"
 	"github.com/lightningnetwork/lnd/lnrpc"
@@ -240,7 +240,9 @@ func strPointToChanPoint(stringPoint string) (*lnrpc.ChannelPoint, error) {
 	}
 
 	return &lnrpc.ChannelPoint{
-		FundingTxid: txid[:],
+		FundingTxid: &lnrpc.ChannelPoint_FundingTxidBytes{
+			txid[:],
+		},
 		OutputIndex: uint32(index),
 	}, nil
 }
@@ -387,7 +389,7 @@ func (l *lightningFaucet) fetchHomeState() (*homePageContext, error) {
 
 	nodeAddr := fmt.Sprintf("%v@%v", nodeInfo.IdentityPubkey, *lndIP)
 	return &homePageContext{
-		NumCoins:    btcutil.Amount(walletBalance.Balance).ToBTC(),
+		NumCoins:    btcutil.Amount(walletBalance.ConfirmedBalance).ToBTC(),
 		NumChannels: nodeInfo.NumActiveChannels,
 		NodeAddr:    nodeAddr,
 		NumConfs:    3,
