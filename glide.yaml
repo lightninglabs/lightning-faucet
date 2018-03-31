@@ -14,7 +14,8 @@ import:
   version: 7abdd30a878efb3673ce4dfe0070570a6c9444c8
   subpackages:
   - lnrpc
-- package: golang.org/x/crypto
+- package: github.com/golang/crypto
+  version: 3d37316aaa6bd9929127ac9a527abf408178ea7b
   subpackages:
   - acme/autocert
 - package: google.golang.org/grpc

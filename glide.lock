@@ -1,5 +1,5 @@
-hash: 95a28cf8deff4dd1ef8df4da1517d47136f5291fc5281abdf7f9598bc41347ff
-updated: 2018-02-14T17:57:33.939805425-08:00
+hash: 29c6542310a11413d2aa90f038a082cd2f9bd96b62568d36b086fd89654cb090
+updated: 2018-03-31T22:44:54.456642565+09:00
 imports:
 - name: github.com/boltdb/bolt
   version: 2f1ce7a837dcb8da3ec595b1dac9d0632f0f99e8
@@ -16,6 +16,10 @@ imports:
   version: 346938d642f2ec3594ed81d874461961cd0faa76
   subpackages:
   - spew
+- name: github.com/golang/crypto
+  version: 3d37316aaa6bd9929127ac9a527abf408178ea7b
+  subpackages:
+  - acme/autocert
 - name: github.com/golang/protobuf
   version: ab9f9a6dab164b7d1246e0e688b0ab7b94d8553e
   subpackages:
@@ -72,7 +76,6 @@ imports:
   version: 9419663f5a44be8b34ca85f08abc5fe1be11f8a3
   subpackages:
   - acme
-  - acme/autocert
   - curve25519
   - nacl/box
   - nacl/secretbox
@@ -125,7 +128,7 @@ imports:
 - name: gopkg.in/errgo.v1
   version: 442357a80af5c6bf9b6d51ae791a39c3421004f3
 - name: gopkg.in/macaroon-bakery.v2
-  version: 04cf5ef151a211d929975161aea7c65f94c90446
+  version: 94012773d2874a067572bd16d7d11ae02968b47b
   subpackages:
   - bakery
   - bakery/checkers
