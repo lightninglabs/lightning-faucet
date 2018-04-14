@@ -13,7 +13,7 @@ Bitcoin and Litecoin testnets.
 The Testnet Lightning Faucet (TLF) is similar to other existing Bitcoin
 faucets.  However, rather then sending bitcoin directly on-chain to a user of
 the faucet, the TLF will instead open a payment channel with the target user.
-The user can then either use their new link to the Lighting Network to
+The user can then either use their new link to the Lightning Network to
 facilitate payments, or immediately close the channel (which immediately
 credits them on-chain like regular faucets).
 
