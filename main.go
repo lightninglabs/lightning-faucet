@@ -36,8 +36,11 @@ var (
 	lndIP = flag.String("lnd_ip", "10.0.0.9", "the public IP address of "+
 		"the faucet's node")
 
+	// lndPort is the port listening for P2P connections.
+	lndPort = flag.String("lnd_port", "9735", "port to listen for P2P")
+
 	// port is the port that the http server should listen on.
-	port = flag.String("port", "8080", "port to list for http")
+	port = flag.String("port", "8080", "port to listen for HTTP")
 
 	// wipeChannels is a bool that indicates if all channels should be
 	// closed (either cooperatively or forcibly) on startup. If all

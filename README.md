@@ -59,7 +59,7 @@ Once you have the faucet installed, you'll need to ensure you have a local
 Once the node is synced, execute the following command (from this directory) to
 deploy the faucet:
 ```
-lightning-faucet --lnd_ip=X.X.X.X
+lightning-faucet --lnd_ip=X.X.X.X --lnd_port=9735
 ```
 
 Where `X.X.X.X` is the public, reachable IP address for your active `lnd` node.

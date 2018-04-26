@@ -387,7 +387,7 @@ func (l *lightningFaucet) fetchHomeState() (*homePageContext, error) {
 		return nil, err
 	}
 
-	nodeAddr := fmt.Sprintf("%v@%v", nodeInfo.IdentityPubkey, *lndIP)
+	nodeAddr := fmt.Sprintf("%v@%v:%v", nodeInfo.IdentityPubkey, *lndIP, *lndPort)
 	return &homePageContext{
 		NumCoins:    btcutil.Amount(walletBalance.ConfirmedBalance).ToBTC(),
 		NumChannels: nodeInfo.NumActiveChannels,
