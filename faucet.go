@@ -568,7 +568,7 @@ func (l *lightningFaucet) openChannel(homeTemplate *template.Template,
 
 	openChanStream, err := l.lnd.OpenChannel(ctxb, openChanReq)
 	if err != nil {
-		http.Error(w, "unable to open chnnel", 500)
+		http.Error(w, "unable to open channel", 500)
 		return
 	}
 
@@ -576,7 +576,7 @@ func (l *lightningFaucet) openChannel(homeTemplate *template.Template,
 	// indicates that the channel has been broadcast to the network.
 	chanUpdate, err := openChanStream.Recv()
 	if err != nil {
-		http.Error(w, "unable to open chnnel", 500)
+		http.Error(w, "unable to open channel", 500)
 		return
 	}
 
