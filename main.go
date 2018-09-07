@@ -13,7 +13,7 @@ import (
 	"reflect"
 	"time"
 
-	"golang.org/x/crypto/acme/autocert"
+	"github.com/golang/crypto/acme/autocert"
 
 	"github.com/gorilla/mux"
 )
@@ -157,14 +157,7 @@ func main() {
 
 	// As we'd like all requests to default to https, redirect all regular
 	// http requests to the https version of the faucet.
-	go http.ListenAndServe(":80", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		targetURL := "https://" + r.Host + r.URL.String()
-		if len(r.URL.RawQuery) > 0 {
-			targetURL += "?" + r.URL.RawQuery
-		}
-
-		http.Redirect(w, r, targetURL, http.StatusPermanentRedirect)
-	}))
+	go http.ListenAndServe(":80", m.HTTPHandler(nil))
 
 	// Finally, create the http server, passing in our TLS configuration.
 	httpServer := &http.Server{
