@@ -43,7 +43,10 @@ var (
 	tlsCertPath            = filepath.Join(lndHomeDir, defaultTLSCertFilename)
 
 	defaultMacaroonFilename = "admin.macaroon"
-	defaultMacaroonPath     = filepath.Join(lndHomeDir, defaultMacaroonFilename)
+	defaultMacaroonPath     = filepath.Join(
+		lndHomeDir, "data", "chain", "bitcoin", "testnet",
+		defaultMacaroonFilename,
+	)
 )
 
 // chanCreationError is an enum which describes the exact nature of an error
@@ -401,12 +404,12 @@ func (l *lightningFaucet) fetchHomeState() (*homePageContext, error) {
 
 	nodeAddr := fmt.Sprintf("%v@%v", nodeInfo.IdentityPubkey, *lndIP)
 	return &homePageContext{
-		NumCoins:    btcutil.Amount(walletBalance.ConfirmedBalance).ToBTC(),
-		NumChannels: nodeInfo.NumActiveChannels,
+		NumCoins:      btcutil.Amount(walletBalance.ConfirmedBalance).ToBTC(),
+		NumChannels:   nodeInfo.NumActiveChannels,
 		GitCommitHash: strings.Replace(string(gitHash), "'", "", -1),
-		NodeAddr:    nodeAddr,
-		NumConfs:    3,
-		Network:     l.network,
+		NodeAddr:      nodeAddr,
+		NumConfs:      3,
+		Network:       l.network,
 	}, nil
 }
 
