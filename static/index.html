@@ -9,6 +9,7 @@
       </a>
       <ul class="collection">
           <li class="collection-item">{{ .NodeAddr }}</li>
+          {{if ne .GitCommitHash ""}}<li class="collection-item">Git Commit: lnd @ #<a href="https://github.com/lightningnetwork/lnd/tree/{{ .GitCommitHash }}" target="_new">{{ .GitCommitHash }}</a></li>{{end}}
       </ul>
   </div>
   <div class="col m3"> </div>
@@ -33,12 +34,12 @@
 
               <h6 class="center align flow-text">Channel Creation Parameters</h6>
 
-              <form method="post" action="/"> 
+              <form method="post" action="/">
                   <div class="row">
                       <div class="input-field col s12">
-                          <input placeholder="<pubkey>" 
-                             {{if eq .SubmissionError 1 2}} 
-                                class="invalid" 
+                          <input placeholder="<pubkey>"
+                             {{if eq .SubmissionError 1 2}}
+                                class="invalid"
                              {{end}}
                             id="node" name="node" type="text">
                           <label for="node" data-error="{{ if eq .SubmissionError 1 2}}{{printf "%v" .SubmissionError}}{{end}}">
@@ -49,9 +50,9 @@
 
                   <div class="row">
                       <div class="input-field col s12">
-                          <input placeholder="100000" 
-                             {{if eq .SubmissionError 3 4 5}} 
-                                class="invalid" 
+                          <input placeholder="100000"
+                             {{if eq .SubmissionError 3 4 5}}
+                                class="invalid"
                              {{end}}
                              id="amt" name="amt" type="text">
 
@@ -63,9 +64,9 @@
 
                   <div class="row">
                       <div class="input-field col s12">
-                          <input placeholder="50000" 
-                             {{if eq .SubmissionError 6 7}} 
-                                class="invalid" 
+                          <input placeholder="50000"
+                             {{if eq .SubmissionError 6 7}}
+                                class="invalid"
                              {{end}}
                              id="bal" name="bal" type="text">
                           <label for="bal" data-error="{{ if eq .SubmissionError 6 7}}{{printf "%v" .SubmissionError}}{{end}}">
@@ -82,7 +83,7 @@
               </form>
           {{else}}
               <span class="flow-text">Channel successfully created!</span> </br>
-              <span class="flow-text"> The broadcast funding transaction can be found 
+              <span class="flow-text"> The broadcast funding transaction can be found
                   <a href="https://testnet.smartbit.com.au/tx/{{.ChannelTxid}}">
                          here.
                   </a>
