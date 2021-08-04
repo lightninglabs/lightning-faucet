@@ -13,6 +13,7 @@ import (
 	"reflect"
 	"time"
 
+	"github.com/btcsuite/btcutil"
 	"github.com/golang/crypto/acme/autocert"
 
 	"github.com/gorilla/mux"
@@ -21,6 +22,12 @@ import (
 var (
 	// netParams is the Bitcoin network that the faucet is operating on.
 	netParams = flag.String("net", "testnet", "bitcoin network to operate on")
+
+	// btcdRpcPass...
+	btcdRpcPass = flag.String("btcduser", "kek", "user name for btcd rpc conn")
+
+	// btcdRpcUser...
+	btcdRpcUser = flag.String("btcdpass", "hello", "pass for btcd rpc conn")
 
 	// lndNodes is a list of lnd nodes that the faucet should connect out
 	// to.
@@ -84,6 +91,9 @@ var (
 	// ctxb is a global context with no timeouts that's used within the
 	// gRPC requests to lnd.
 	ctxb = context.Background()
+
+	defaultBtcdDir         = btcutil.AppDataDir("btcd", false)
+	defaultBtcdRPCCertFile = filepath.Join(defaultBtcdDir, "rpc.cert")
 )
 
 const (
@@ -129,6 +139,7 @@ func main() {
 	r.HandleFunc("/", faucet.faucetHome).Methods("POST", "GET")
 	r.HandleFunc("/channels/active", faucet.activeChannels)
 	r.HandleFunc("/channels/pending", faucet.activeChannels)
+	r.HandleFunc("/estimatefee", faucet.estimateFee)
 
 	// Next create a static file server which will dispatch our static
 	// files. We rap the file sever http.Handler is a handler that strips

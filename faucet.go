@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"io/ioutil"
@@ -18,6 +19,7 @@ import (
 	macaroon "gopkg.in/macaroon.v2"
 
 	"github.com/btcsuite/btcd/chaincfg/chainhash"
+	"github.com/btcsuite/btcd/rpcclient"
 	"github.com/btcsuite/btcd/wire"
 	"github.com/btcsuite/btcutil"
 	"github.com/davecgh/go-spew/spew"
@@ -133,6 +135,8 @@ func (c chanCreationError) String() string {
 type lightningFaucet struct {
 	lnd lnrpc.LightningClient
 
+	btcdClient *rpcclient.Client
+
 	templates *template.Template
 
 	network string
@@ -180,17 +184,46 @@ func newLightningFaucet(lndHost string,
 	// the faucet safely.
 	lnd := lnrpc.NewLightningClient(conn)
 
+	// As we may need to grab fee estimates, we'll also establish a
+	// connection to the running btcd node so we can query it and wrap its
+	// responses.
+	var btcdRpcCert []byte
+	btcdCertFile, err := os.Open(defaultBtcdRPCCertFile)
+	if err != nil {
+		return nil, err
+	}
+	btcdRpcCert, err = ioutil.ReadAll(btcdCertFile)
+	if err != nil {
+		return nil, err
+	}
+	btcdCertFile.Close()
+
+	config := &rpcclient.ConnConfig{
+		Host:         "localhost:18334",
+		Endpoint:     "ws",
+		User:         *btcdRpcUser,
+		Pass:         *btcdRpcPass,
+		Certificates: btcdRpcCert,
+	}
+	rpcClient, err := rpcclient.New(config, nil)
+	if err != nil {
+		return nil, err
+	}
+
 	return &lightningFaucet{
-		lnd:       lnd,
-		templates: templates,
-		network:   network,
+		btcdClient: rpcClient,
+		lnd:        lnd,
+		templates:  templates,
+		network:    network,
 	}, nil
 }
 
 // Start launches all the goroutines necessary for routine operation of the
 // lightning faucet.
-func (l *lightningFaucet) Start() {
-	go l.zombieChanSweeper()
+func (l *lightningFaucet) Start() error {
+	//go l.zombieChanSweeper()
+
+	return nil
 }
 
 // zombieChanSweeper is a goroutine that is tasked with cleaning up "zombie"
@@ -621,7 +654,55 @@ func (l *lightningFaucet) activeChannels(w http.ResponseWriter, r *http.Request)
 	l.templates.Lookup("active.html").Execute(w, openChannels)
 }
 
-func (l *lightningFaucet) pendingChannels(w http.ResponseWriter, r *http.Request) {
+// estimateFee...
+func (l *lightningFaucet) estimateFee(w http.ResponseWriter, r *http.Request) {
+	// If the user didn't specify a conf target, then we'll fall back to
+	// the default of 3.
+	confTarget := int64(3)
+
+	var err error
+	queryConfTarget, ok := r.URL.Query()["numBlocks"]
+	if ok && len(queryConfTarget) > 0 {
+		target, err := strconv.ParseInt(queryConfTarget[0], 10, 32)
+		if err != nil {
+			http.Error(w, "incorrect value for numBlocks passed", 500)
+			return
+		}
+		confTarget = target
+	}
+
+	// First, we'll fetch the estimate for our confirmation target.
+	btcPerKB, err := l.btcdClient.EstimateFee(confTarget)
+	if err != nil {
+		log.Printf("unable to estimate fee: %v", err)
+		http.Error(w, "unable to estimate fee", 500)
+		return
+	}
+
+	// Next, we'll convert the returned value to satoshis, as it's
+	// currently returned in BTC.
+	satPerKB, err := btcutil.NewAmount(btcPerKB)
+	if err != nil {
+		log.Printf("unable to convert fee: %v", err)
+		http.Error(w, "unable to estimate fee", 500)
+		return
+	}
+
+	// Now that we have our response, we can craft a JSON blob to send back
+	// to the end user.
+	type resp struct {
+		FeePerKb int64 `json:"feePerKb"`
+	}
+	jsonBlob, err := json.Marshal(&resp{int64(satPerKB)})
+	if err != nil {
+		log.Printf("unable to encode fee: %v", err)
+		http.Error(w, "unable to estimate fee", 500)
+		return
+	}
+	fmt.Println("blob resp: ", string(jsonBlob))
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsonBlob)
 }
 
 // CloseAllChannels attempt unconditionally close ALL of the faucet's currently
