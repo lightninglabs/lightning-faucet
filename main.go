@@ -14,7 +14,7 @@ import (
 	"time"
 
 	"github.com/btcsuite/btcutil"
-	"github.com/golang/crypto/acme/autocert"
+	"golang.org/x/crypto/acme/autocert"
 
 	"github.com/gorilla/mux"
 )
