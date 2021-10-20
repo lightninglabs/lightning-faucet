@@ -20,7 +20,7 @@ credits them on-chain like regular faucets).
 Currently the TLF is only compatible with `lnd`, but in the near future as the
 other Lightning implementations ([eclair](https://github.com/ACINQ/eclair/),
 [c-lightning](https://github.com/ElementsProject/lightning),
-[lit](https://github.com/ElementsProject/lightning), and more) become
+[lit](https://github.com/mit-dci/lit), and more) become
 compatible, the faucet will also be usable between all the active
 implementations.
 
