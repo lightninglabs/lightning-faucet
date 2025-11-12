@@ -186,28 +186,32 @@ func newLightningFaucet(lndHost string,
 
 	// As we may need to grab fee estimates, we'll also establish a
 	// connection to the running btcd node so we can query it and wrap its
-	// responses.
+	// responses. This is optional - if btcd is not available, we'll continue
+	// without it (fee estimation endpoint will not work).
+	var rpcClient *rpcclient.Client
 	var btcdRpcCert []byte
 	btcdCertFile, err := os.Open(defaultBtcdRPCCertFile)
 	if err != nil {
-		return nil, err
-	}
-	btcdRpcCert, err = ioutil.ReadAll(btcdCertFile)
-	if err != nil {
-		return nil, err
-	}
-	btcdCertFile.Close()
+		log.Printf("Warning: btcd cert not found, fee estimation will be disabled: %v", err)
+	} else {
+		btcdRpcCert, err = ioutil.ReadAll(btcdCertFile)
+		if err != nil {
+			log.Printf("Warning: could not read btcd cert: %v", err)
+		} else {
+			btcdCertFile.Close()
 
-	config := &rpcclient.ConnConfig{
-		Host:         "localhost:18334",
-		Endpoint:     "ws",
-		User:         *btcdRpcUser,
-		Pass:         *btcdRpcPass,
-		Certificates: btcdRpcCert,
-	}
-	rpcClient, err := rpcclient.New(config, nil)
-	if err != nil {
-		return nil, err
+			config := &rpcclient.ConnConfig{
+				Host:         "localhost:18334",
+				Endpoint:     "ws",
+				User:         *btcdRpcUser,
+				Pass:         *btcdRpcPass,
+				Certificates: btcdRpcCert,
+			}
+			rpcClient, err = rpcclient.New(config, nil)
+			if err != nil {
+				log.Printf("Warning: could not connect to btcd: %v", err)
+			}
+		}
 	}
 
 	return &lightningFaucet{
@@ -656,6 +660,12 @@ func (l *lightningFaucet) activeChannels(w http.ResponseWriter, r *http.Request)
 
 // estimateFee...
 func (l *lightningFaucet) estimateFee(w http.ResponseWriter, r *http.Request) {
+	// Check if btcd client is available
+	if l.btcdClient == nil {
+		http.Error(w, "fee estimation not available (btcd not connected)", 503)
+		return
+	}
+
 	// If the user didn't specify a conf target, then we'll fall back to
 	// the default of 3.
 	confTarget := int64(3)
